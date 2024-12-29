@@ -102,8 +102,8 @@ Edit the configuration file manually or use the `add-project` CLI command.
 ## Roadmap
 
 ### MVP Features
-- [x] Generate Markdown templates for plans and retrospectives.
-- [x] CLI for adding projects and updating tasks.
+- [ ] Generate Markdown templates for plans and retrospectives.
+- [ ] CLI for adding projects and updating tasks.
 - [ ] JSON export for analytics.
 
 ### Future Enhancements
