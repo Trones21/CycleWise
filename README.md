@@ -21,7 +21,7 @@
   - Export plans and retrospectives as JSON for analytics and integration with other tools.
 
 - **Command-Line Interface (CLI)**:
-  - Quickly generate templates, update task statuses, and add new projects via CLI.
+  - Quickly generate templates and add new projects via CLI.
 
 ---
 
@@ -54,23 +54,44 @@ Generate a new weekly plan with tasks from the previous week:
 ```
 - `--date`: Specify the week (defaults to the current date).
 
-### Update Retrospective
-Update the status of tasks from the prior week:
-```bash
-./cyclewise retro --file weekly-plan-2024-01-01.md
-```
+### Retrospective Workflow
+The CLI does not directly update the retro file. Instead, users edit the retrospective Markdown manually. CycleWise assists in the following ways:
 
-### Add a New Project
-Add a project to the configuration file:
-```bash
-./cyclewise add-project --name "Node Visualizer" --roadmap "/roadmaps/node-visualizer.md"
-```
+#### Convert Plan File to Retro Template 
+Take the current week's plan and add a `Retro Status` column to the task tables.
+   - Status options: `Complete`, `Made Progress`, `Did Not Make Progress`.
 
-### Export JSON
-Export the weekly retrospective as JSON:
+#### Retro JSON Export
+`goldmark` is used to parse the retro markdown file and create a JSON export.
+
+- Parse the plan to retrieve existing project and task IDs.
+  - Generate new IDs for projects and tasks only if they are missing.
+
+#### Export Retrospective to JSON
 ```bash
-./cyclewise export-json --file weekly-retro-2024-01-01.md
+./cyclewise retro --file weekly-retro-2024-01-01.md
 ```
+- Parses the retrospective file and outputs a JSON representation.
+
+### Generate a New Weekly Plan from Previous Week
+The CLI prompts you to select which projects to include in the new week’s plan:
+```bash
+./cyclewise plan --generate-new
+```
+1. The tool displays a list of projects from the previous plan:
+   ```
+   Which projects would you like to track this week?
+   [1] Project A (Last updated: 2024-01-01)
+   [2] Project B (Last updated: 2024-01-01)
+   [3] Project C (Last updated: 2024-01-01)
+   Enter the numbers (comma-separated): 1,3
+   ```
+2. For each selected project:
+   - Tasks marked `Complete` are excluded.
+   - Tasks marked `Made Progress` or `Did Not Make Progress` are carried over with their statuses reset to `Pending`.
+3. The new weekly plan includes metadata:
+   - `lastUpdated`: The date of the last retro update.
+   - `includedInCurrentPlan`: Boolean to indicate if the project is part of the current plan.
 
 ---
 
@@ -105,26 +126,9 @@ Edit the configuration file manually or use the `add-project` CLI command.
 - [ ] Generate Markdown templates for plans and retrospectives.
 - [ ] CLI for adding projects and updating tasks.
 - [ ] JSON export for analytics.
+- [ ] Retrospective JSON export with task IDs and statuses.
+- [ ] Integration with `goldmark` for Markdown parsing.
+- [ ] Prompt for project selection and carryover tasks.
 
 ### Future Enhancements
-- [ ] Web-based dashboard for progress visualization.
-- [ ] Integration with third-party tools like Trello or Notion.
-- [ ] Centralized JSON storage for long-term task tracking.
-
----
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
-
----
-
-## License
-
-CycleWise is licensed under the [MIT License](LICENSE).
-
----
-
-## Contact
-
-For questions or feedback, please contact cyclewise@gmailisprofessional.com
+- TBD
